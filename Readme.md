@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Zinochek](https://up.htmlacademy.ru/javascript/29/user/2162701).
-* Наставник: `Неизвестно`.
+* Наставник: `Антон Попов` (https://htmlacademy.ru/profile/joker).
 
 ---
 
