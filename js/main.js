@@ -25,8 +25,7 @@ function getRandomInteger (min, max) {
 }
 
 //генерация случайного элемента массива
-// eslint-disable-next-line no-undef
-const getRandomArrayElement = (elements,) => elements[getRandomPositiveInteger(0, elements.length - 1)];
+const getRandomArrayElement = (elements,) => elements[getRandomInteger(0, elements.length - 1)];
 
 // Генерация порядкого номера
 function createIdGenerator () {
