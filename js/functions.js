@@ -1,22 +1,31 @@
-const GET_STRING_LENGHT = (testString, stringLength) => {
+/**
+ * Проверка длины строки
+ * @param {string} testString  — исходная строка
+ * @param {number} stringLength - максимальное кол-во символов
+ * @returns {boolean} — false, если является, либо true
+ */
+
+const getSTtringLeNnght = (testString, stringLength) => {
   if (testString.length > stringLength) {
     return false;
   }
   return true;
 };
 
-GET_STRING_LENGHT('хочется как можно меньше работать и больше веселиться', 35);
+getSTtringLeNnght('хочется как можно меньше работать и больше веселиться', 35);
 
 /**
-* приводим к одному регистру, удалям пробеллы в строке
-* делаем все буквы элементами массива, меняем положение и удаляем все запятые и пробелы самого массива
-*/
-const CHECK_PALINDROM = (palindrome) => {
+ * Проверка строки на палиндром
+ * @param {string} palindrome — исходная строка
+ * @return {boolean} — true, если является, либо false
+ */
+
+const checkPalindrom = (palindrome) => {
   if (palindrome.toUpperCase().replaceAll(' ', '') === palindrome.toUpperCase().replaceAll(' ', '').split('').reverse().join('')) {
     return true;
   }
   return false;
 };
 
-CHECK_PALINDROM('привет');
-CHECK_PALINDROM('Лёша на полке клопа нашёл');
+checkPalindrom('привет');
+checkPalindrom('Лёша на полке клопа нашёл');
