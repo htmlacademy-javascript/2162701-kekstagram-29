@@ -1,5 +1,4 @@
-import {getPhotoPostedByUser} from './data.js';
-import './function.js';
+import {createThumbnail} from './mini-pictures.js';
 
 // eslint-disable-next-line no-console
-console.log(getPhotoPostedByUser());
+createThumbnail();
