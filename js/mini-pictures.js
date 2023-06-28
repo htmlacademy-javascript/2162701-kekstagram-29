@@ -3,17 +3,18 @@ const pictureTemplateElement = document.querySelector('#picture').content.queryS
 
 /**
  * Функция по отрисовки миниатюр
- * @param {array} отрисованные миниатюры
+ * @param {Object} drawThumbnails - массив объектов
  */
 const createThumbnail = (drawThumbnails) => {
   const pictureListFragment = document.createDocumentFragment();
   drawThumbnails.forEach((thumbnail) => { //перебираем эл массива отрисованных миниатюр
     const pictureElement = pictureTemplateElement.cloneNode(true); //клонирование элемента со всеми вложенностями
 
-    pictureElement.querySelector('.picture__img').src = thumbnail.url; //добавляем фото
-    pictureElement.querySelector('.picture__img').alt = thumbnail.description;
-    pictureElement.querySelector('.picture__likes').textContent = thumbnail.likes;
-    pictureElement.querySelector('.picture__comments').textContent = thumbnail.comments;
+    const [url, description, likes, comments] = [thumbnail.url, thumbnail.description, thumbnail.likes, thumbnail.comments];
+    pictureElement.querySelector('.picture__img').src = url; //добавляем фото
+    pictureElement.querySelector('.picture__img').alt = description;
+    pictureElement.querySelector('.picture__likes').textContent = likes;
+    pictureElement.querySelector('.picture__comments').textContent = comments;
     picturesContainerElement.appendChild(pictureElement); //вставляем на страницу
   });
   picturesContainerElement.appendChild(pictureListFragment);
