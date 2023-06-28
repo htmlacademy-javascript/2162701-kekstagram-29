@@ -3,6 +3,4 @@ import {getPhotoPostedByUser} from './data.js';
 
 const drawThumbnails = getPhotoPostedByUser(); //отрисовываем миниатюры
 
-createThumbnail();
-
-export {drawThumbnails};
+createThumbnail(drawThumbnails);

@@ -1,27 +1,22 @@
-//import {getPhotoPostedByUser} from './data.js';
-import {drawThumbnails} from './main.js';
-
-const picturesContainer = document.querySelector('.pictures'); //ищем куда складывать фото
-const picture = document.querySelector('#picture').content.querySelector('.picture'); //ищем шаблон
-
-//const drawThumbnails = getPhotoPostedByUser(); //отрисовываем миниатюры
-const pictureListFragment = document.createDocumentFragment();
+const picturesContainerElement = document.querySelector('.pictures'); //ищем куда складывать фото
+const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture'); //ищем шаблон
 
 /**
  * Функция по отрисовки миниатюр
  * @param {array} отрисованные миниатюры
  */
-const createThumbnail = () => {
+const createThumbnail = (drawThumbnails) => {
+  const pictureListFragment = document.createDocumentFragment();
   drawThumbnails.forEach((thumbnail) => { //перебираем эл массива отрисованных миниатюр
-    const pictureElement = picture.cloneNode(true); //клонирование элемента со всеми вложенностями
-    const img = pictureElement.querySelector('.picture__img'); //добавляем фото
-    img.src = thumbnail.url;
-    img.alt = thumbnail.description;
+    const pictureElement = pictureTemplateElement.cloneNode(true); //клонирование элемента со всеми вложенностями
+
+    pictureElement.querySelector('.picture__img').src = thumbnail.url; //добавляем фото
+    pictureElement.querySelector('.picture__img').alt = thumbnail.description;
     pictureElement.querySelector('.picture__likes').textContent = thumbnail.likes;
     pictureElement.querySelector('.picture__comments').textContent = thumbnail.comments;
-    picturesContainer.appendChild(pictureElement); //вставляем на страницу
-    picturesContainer.appendChild(pictureListFragment);
+    picturesContainerElement.appendChild(pictureElement); //вставляем на страницу
   });
+  picturesContainerElement.appendChild(pictureListFragment);
 };
 
 export {createThumbnail};
