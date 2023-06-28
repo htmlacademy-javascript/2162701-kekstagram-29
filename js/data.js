@@ -73,7 +73,7 @@ const getComments = () => {
  * @param {number} likes - случайное количество лайков
  * @param {array} comments - массив комментариев
  */
-const photoPostedByUser = () => ({
+const postedPhotoByUser = () => ({
   id: generatePhotoId(),
   url: `photos/${generatePhotoUrl()}.jpg`,
   description: getRandomArrayElement(DESCRIPTION_FOTO),
@@ -84,7 +84,7 @@ const photoPostedByUser = () => ({
 /**
 * Функция для создания массива объектов с описанием фото
 */
-const getPhotoPostedByUser = () => Array.from({length: NUMBER_OF_UPLOADED_PHOTOS}, photoPostedByUser);
+const getPhotoPostedByUser = () => Array.from({length: NUMBER_OF_UPLOADED_PHOTOS}, postedPhotoByUser);
 
 // eslint-disable-next-line no-console
 //getPhotoPostedByUser();
