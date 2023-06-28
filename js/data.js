@@ -23,33 +23,41 @@ const DESCRIPTION_FOTO = ['пляж', 'go to the beach', 'океан', 'деву
 const NUMBER_OF_UPLOADED_PHOTOS = 25;
 
 //min и max количество аватарок
-const AVATAR_RANGE = {
-  min: 1,
-  max: 6
+const AvatarRange = {
+  MIN: 1,
+  MAX: 6
 };
 
 //min и max количество лайков
-const LIKES_RANGE = {
-  min: 15,
-  max: 200
+const LikesRange = {
+  MIN: 15,
+  MAX: 200
 };
 
 //число случайных коментариев из диапазона
-const COMMENT_RANGE = {
-  min: 0,
-  max: 30
+const CommentRange = {
+  MIN: 0,
+  MAX: 30
 };
 
 const generatePhotoId = getIdGenerator(); // id фото по порядку
 const generatePhotoUrl = getIdGenerator(); // Url фото по порядку
-const generateComments = getIdGenerator(); // comments под фото по порядку
+const generateIdComment = getIdGenerator(); // comments под фото по порядку
 
-const photoСomments = () => { //ф-ия по созданию массива объектов — список комментариев
-  const arrComments = []; // массив для хранения объектов
-  for (let i = 0; i < getRandomInteger(COMMENT_RANGE.min, COMMENT_RANGE.max); i++) { //диапазон коментариев, к одной фото
+/**
+ * Функция по созданию массива объектов — список комментариев
+ * @param {number} id - идентификатор комментария
+ * @param {string} avatar - ссылка на автар, который формируется по правилу img/avatar-{{случайное число от 1 до 6}}.svg
+ * @param {string} message - комментарий
+ * @param {string} name - имя пользователя данного комментария
+ * @return {array} - массив объектов
+ */
+const getComments = () => {
+  const arrComments = [];
+  for (let i = 0; i < getRandomInteger(CommentRange.MIN, CommentRange.MAX); i++) { //диапазон коментариев, к одной фото
     arrComments.push({
-      id: generateComments(),
-      avatar: `img/avatar-${getRandomInteger(AVATAR_RANGE.min, AVATAR_RANGE.max)}.svg`,
+      id: generateIdComment(),
+      avatar: `img/avatar-${getRandomInteger(AvatarRange.MIN, AvatarRange.MAX)}.svg`,
       message: getRandomArrayElement(MASSAGES),
       name: getRandomArrayElement(USER_NAME)
     });
@@ -57,17 +65,28 @@ const photoСomments = () => { //ф-ия по созданию массива о
   return arrComments;
 };
 
-const photoPostedByUser = () => ({ // ф-ия по созданию массива из сгенерированных объектов
+/**
+ * Функция по созданию массива из сгенерированных объектов
+ * @param {number} id - идентификатор фото
+ * @param {string} url - ссылка на фото, которая формируется по правилу photos/{{id от 1 до 25}}.jpg
+ * @param {string} description - случайное описание под фото
+ * @param {number} likes - случайное количество лайков
+ * @param {array} comments - массив комментариев
+ */
+const postedPhotoByUser = () => ({
   id: generatePhotoId(),
   url: `photos/${generatePhotoUrl()}.jpg`,
   description: getRandomArrayElement(DESCRIPTION_FOTO),
-  likes: getRandomInteger(LIKES_RANGE.min, LIKES_RANGE.max),
-  comments: photoСomments()
+  likes: getRandomInteger(LikesRange.MIN, LikesRange.MAX),
+  comments: getComments()
 });
 
-const getPhotoPostedByUser = () => Array.from({length: NUMBER_OF_UPLOADED_PHOTOS}, photoPostedByUser);
+/**
+* Функция для создания массива объектов с описанием фото
+*/
+const getPhotoPostedByUser = () => Array.from({length: NUMBER_OF_UPLOADED_PHOTOS}, postedPhotoByUser);
 
 // eslint-disable-next-line no-console
-console.log(getPhotoPostedByUser());
+//getPhotoPostedByUser();
 
 export {getPhotoPostedByUser};

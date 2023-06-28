@@ -1,5 +1,8 @@
+import {createThumbnail} from './mini-pictures.js';
 import {getPhotoPostedByUser} from './data.js';
-import './function.js';
 
-// eslint-disable-next-line no-console
-console.log(getPhotoPostedByUser());
+const drawThumbnails = getPhotoPostedByUser(); //отрисовываем миниатюры
+
+createThumbnail();
+
+export {drawThumbnails};

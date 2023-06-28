@@ -1,4 +1,9 @@
-//Генерация случайных чисел
+/**
+ * Функция для создания случайного числа в диапозоне от min до max
+ * @param {number} min - нижняя граница диапозона
+ * @param {number} max - верхняя граница диапозона
+ * @return {number} - возвращает случайное число в диапозоне от min до max
+ */
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
   const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
@@ -7,14 +12,21 @@ const getRandomInteger = (min, max) => {
   return Math.floor(result);
 };
 
-//Генерация случайного элемента массива
-const getRandomArrayElement = (elements,) => elements[getRandomInteger(0, elements.length - 1)];
+/**
+ * Функция для генерации случайного элемента массива
+ * @param {array} elements - массив данных для генерации
+ * @return {string} - возвращает элемент массива elements
+ */
+const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-//Генерация порядкого номера
+/**
+ * Функция для генерации порядкого номера
+ * @return {number} - возвращает порядковый номер
+ */
 const getIdGenerator = () => {
   let lastGeneratedId = 0;
 
-  return function () {
+  return () => {
     lastGeneratedId += 1;
     return lastGeneratedId;
   };

@@ -5,14 +5,14 @@
  * @returns {boolean} — false, если является, либо true
  */
 
-const getSTtringLeNnght = (testString, stringLength) => {
+const getStringLenght = (testString, stringLength) => {
   if (testString.length > stringLength) {
     return false;
   }
   return true;
 };
 
-getSTtringLeNnght('хочется как можно меньше работать и больше веселиться', 35);
+getStringLenght('хочется как можно меньше работать и больше веселиться', 35);
 
 /**
  * Проверка строки на палиндром
