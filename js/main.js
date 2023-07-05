@@ -1,8 +1,7 @@
 import {createThumbnail} from './mini-pictures.js';
 import {getPhotoPostedByUser} from './data.js';
+//import {openUserBigFoto} from './big-pictures.js';
 
-const drawThumbnails = getPhotoPostedByUser(); //отрисовываем миниатюры
+const photos = getPhotoPostedByUser(); //отрисовываем миниатюры
 
-createThumbnail();
-
-export {drawThumbnails};
+createThumbnail(photos);

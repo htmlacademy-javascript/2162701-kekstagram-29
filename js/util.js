@@ -1,3 +1,4 @@
+//Функции для моков
 /**
  * Функция для создания случайного числа в диапозоне от min до max
  * @param {number} min - нижняя граница диапозона
@@ -31,7 +32,15 @@ const getIdGenerator = () => {
     return lastGeneratedId;
   };
 };
+const bigFotoElement = document.querySelector('.big-picture'); //модальное окно
+//функция для чистоты кода
+const isEscapeKey = (evt) => evt.key === 'Escape';
+const isModalTarget = (evt) => evt.target === bigFotoElement;
 
+//функции для моков
 export {getRandomInteger};
 export {getRandomArrayElement};
 export {getIdGenerator};
+//функция для чистоты кода
+export {isEscapeKey};
+export {isModalTarget};
