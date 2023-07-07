@@ -3,14 +3,15 @@ const commentItem = commentsList.querySelector('.social__comment');
 const commentsListFragment = document.createDocumentFragment();
 
 /**
- *
+ * Функция по отрисовке коментариев
  * @param {object} comments массив коментариев
  */
-const createCommentForm = (comments) => {
+const renderComments = (comments) => {
   comments.forEach(({avatar, name, message}) => {
     const comment = commentItem.cloneNode(true);
-    comment.querySelector('.social__picture').src = avatar;
-    comment.querySelector('.social__picture').alt = name;
+    const picture = commentItem.querySelector('.social__picture');
+    picture.src = avatar;
+    picture.alt = name;
     comment.querySelector('.social__text').innerText = message;
     commentsList.append(comment);
   });
@@ -18,4 +19,4 @@ const createCommentForm = (comments) => {
 };
 
 
-export {createCommentForm};
+export {renderComments};
