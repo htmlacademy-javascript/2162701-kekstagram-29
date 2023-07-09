@@ -84,9 +84,9 @@ const postedPhotoByUser = () => ({
 /**
 * Функция для создания массива объектов с описанием фото
 */
-const getPhotoPostedByUser = () => Array.from({length: NUMBER_OF_UPLOADED_PHOTOS}, postedPhotoByUser);
+const getPhotosPostedByUser = () => Array.from({length: NUMBER_OF_UPLOADED_PHOTOS}, postedPhotoByUser);
 
 // eslint-disable-next-line no-console
 //getPhotoPostedByUser();
 
-export {getPhotoPostedByUser};
+export {getPhotosPostedByUser};
