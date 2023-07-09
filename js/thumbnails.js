@@ -1,4 +1,4 @@
-import {openUserBigPhoto} from './modal-big-photos.js';
+import {renderBigPhoto} from './modal-big-photos.js';
 
 const pictureContainerElement = document.querySelector('.pictures'); //ищем куда складывать фото
 const pictureTemplateElement = document.querySelector('#picture').content.querySelector('.picture'); //ищем шаблон
@@ -21,7 +21,7 @@ const renderThumbnails = (drawThumbnails) => {
     pictureContainerElement.append(pictureElement); //вставляем на страницу
 
     pictureElement.addEventListener('click', () => { //создаем замыкание
-      openUserBigPhoto(thumbnail);
+      renderBigPhoto(thumbnail);
     });
 
   });
