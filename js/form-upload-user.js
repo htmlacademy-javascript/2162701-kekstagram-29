@@ -1,4 +1,4 @@
-import { isEscapeKey, isOverlayTarget } from './util.js';
+import { isEscapeKey } from './util.js';
 import { pristine, isInputFocus } from './form-validation.js';
 
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
@@ -11,20 +11,11 @@ const uploadCancel = uploadForm.querySelector('.img-upload__cancel'); //кноп
  * @param {object} evt объект события
  */
 const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt) && !isInputFocus) {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeUserOverlay();
-  }
-};
-
-/**
- * функция для закрытия подложки при клике по документу
- * @param {object} evt объект события
- */
-const onDocumentTargetClick = (evt) => {
-  if (isOverlayTarget(evt) && !isInputFocus) {
-    evt.preventDefault();
-    closeUserOverlay();
+    if (isInputFocus()) {
+      closeUserOverlay();
+    }
   }
 };
 
@@ -35,7 +26,6 @@ const openUserOverlay = () => {
   uploadOverlay.classList.remove('hidden'); // 1. Показать подложку
   document.body.classList.add('modal-open');//2. отключаем скрол под подложкой
   document.addEventListener('keydown', onDocumentKeydown); // 3. Добавить обработчики для закрытия на клавишу
-  document.addEventListener('click', onDocumentTargetClick); // 4. Добавить обработчики для закрытия на клик вне модального окна
 };
 
 /**
@@ -49,15 +39,19 @@ function closeUserOverlay () {
   uploadOverlay.classList.add('hidden'); // 1. Скрыть подложку
   document.body.classList.remove('modal-open');// 2. включить скрол
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
-  document.removeEventListener('click', onDocumentTargetClick); //4. удалить обработчик событий при клике вне модального окна
 }
 
 uploadCancel.addEventListener('click', () => {
   closeUserOverlay();
 });
 
-const initUploadForm = () => {
+
+const openUploadForm = () => {
   uploadInput.addEventListener('change', openUserOverlay);
 };
 
-export { initUploadForm };
+/*uploadInput.addEventListener('change', () => {
+  openUserOverlay();
+});*/
+
+export { openUploadForm };

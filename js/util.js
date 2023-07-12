@@ -33,16 +33,14 @@ const getIdGenerator = () => {
   };
 };
 const bigFotoElement = document.querySelector('.big-picture'); //модальное окно
-const uploadOverlay = document.querySelector('.img-upload__overlay');//подложка
 //функция для чистоты кода
 const isEscapeKey = (evt) => evt.key === 'Escape';
 const isModalTarget = (evt) => evt.target === bigFotoElement;
-const isOverlayTarget = (evt) => evt.target === uploadOverlay;
 
 //функции для моков
 export {getRandomInteger};
 export {getRandomArrayElement};
 export {getIdGenerator};
 //функция для чистоты кода
-export { isEscapeKey, isModalTarget, isOverlayTarget };
+export { isEscapeKey, isModalTarget };
 
