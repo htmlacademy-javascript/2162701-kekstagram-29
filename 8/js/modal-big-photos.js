@@ -50,7 +50,7 @@ const renderComment = ({avatar, name, message}) => {
 const renderComments = () => {
   const fragment = document.createDocumentFragment();
   const currentComments = comments.slice(commentsShown, commentsShown + SHOW_COMMENTS_STEP); //показ выбранных коментариеы из массива
-  commentsShown = Math.min(commentsShown + SHOW_COMMENTS_STEP, comments.length); //вместо цикла проверки
+  commentsShown = Math.min(commentsShown + SHOW_COMMENTS_STEP, comments.length); //вместо цикла проверки, обрезание значения
 
   currentComments.forEach((comment) => fragment.append(renderComment(comment)));
   commentsList.append(fragment);
@@ -60,7 +60,7 @@ const renderComments = () => {
 
 /**
  * функция по отбражению коментов, при нажатии на кнопку
- * @param {object} evt объект собития
+ * @param {object} evt объект события
  */
 function onShowMoreButtonClick (evt) {
   evt.preventDefault();
@@ -69,7 +69,7 @@ function onShowMoreButtonClick (evt) {
 
 /**
  * функция для закрытия модального окна с помощью клавиатуры
- * @param {object} evt объект собития
+ * @param {object} evt объект события
  */
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -80,7 +80,7 @@ const onDocumentKeydown = (evt) => {
 
 /**
  * функция для закрытия модального окна при клике по документу
- * @param {object} evt объект собития
+ * @param {object} evt объект события
  */
 const onDocumentTargetClick = (evt) => {
   if (isModalTarget(evt)) {
@@ -97,7 +97,7 @@ const openUserBigPhoto = () => {
   document.body.classList.add('modal-open');//2. отключаем скрол под подложкой
   document.addEventListener('keydown', onDocumentKeydown); // 3. Добавить обработчики для закрытия на клавишу
   document.addEventListener('click', onDocumentTargetClick); // 4. Добавить обработчики для закрытия на клик вне модального окна
-  btnDownloadMore.addEventListener('click', onShowMoreButtonClick);
+  btnDownloadMore.addEventListener('click', onShowMoreButtonClick); // 5. Добавить обработчики для кнопки загрузить еще
 };
 
 /**
@@ -108,7 +108,7 @@ function closeUserBigFoto () {
   document.body.classList.remove('modal-open');// 2. включить скрол
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
   document.removeEventListener('click', onDocumentTargetClick); //4. удалить обработчик событий при клике вне модального окна
-  btnDownloadMore.removeEventListener('click', onShowMoreButtonClick);
+  btnDownloadMore.removeEventListener('click', onShowMoreButtonClick); //5. удалить обработчик событий для кнопки загрузить еще
   commentsShown = 0;
 }
 
@@ -131,11 +131,11 @@ const fillBigPhoto = ({url, likes, description, messages}) => {
 
 /**
  * функция по созданию фото с коментариями
- * @param {Array} data массив данных
+ * @param {object} data массив обектов данных
  */
 const displayBigPhoto = (data) => {
-  commentsList.innerHTML = ''; //список коментариев
-  comments = data.comments;
+  commentsList.innerHTML = ''; //очищаем список коментариев
+  comments = data.comments; //созданному массиву присваиваем массив комментариев из объекта
   openUserBigPhoto(); //открытие модалки
   fillBigPhoto(data); //наполненеие данными
 };
