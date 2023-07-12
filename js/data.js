@@ -36,7 +36,7 @@ const LikesRange = {
 
 //число случайных коментариев из диапазона
 const CommentRange = {
-  MIN: 0,
+  MIN: 10,
   MAX: 30
 };
 

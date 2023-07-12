@@ -1,17 +1,75 @@
 import { isEscapeKey, isModalTarget } from './util.js';
 
+const SHOW_COMMENTS_STEP = 5;
+
 const bigFotoElement = document.querySelector('.big-picture'); //модальное окно
 const commentsList = bigFotoElement.querySelector('.social__comments'); //список коментов
-const commentItem = commentsList.querySelector('.social__comment'); //один комент
+const commentItem = bigFotoElement.querySelector('.social__comment'); //один комент
 const commentsCount = bigFotoElement.querySelector('.social__comment-count'); //5 коментариев
-const commentsTotalCount = bigFotoElement.querySelector('.comments-count'); //из всего ком
 const btnDownloadMore = bigFotoElement.querySelector('.comments-loader'); //кнопка загрузить еще
 const bigFotoCloseElement = bigFotoElement.querySelector('.big-picture__cancel'); //кнопка закрыть
-let numberComments;
+let comments;
+let commentsShown = 0;
+
+/**
+ * функция по созданию живой строки
+ */
+const fillCommentsCounter = () => {
+  commentsCount.innerHTML = `${commentsShown} из <span class="comment-count">${comments.length}</span> комментариев`;
+};
+
+/**
+ * функция по показу кнопки загрузить еще
+ * @returns
+ */
+const setButtonState = () => {
+  if (commentsShown >= comments.length) {
+    btnDownloadMore.classList.add('hidden');
+    return;
+  }
+  btnDownloadMore.classList.remove('hidden');
+};
+
+/**
+ * Функция по отрисовки одного комментария
+ * @param {object} деструктуризация параметров обьекта данных
+ * @returns возращаем шаблон одного коментария
+ */
+const renderComment = ({avatar, name, message}) => {
+  const comment = commentItem.cloneNode(true);
+  const pictureComment = comment.querySelector('.social__picture');
+  pictureComment.src = avatar;
+  pictureComment.alt = name;
+  comment.querySelector('.social__text').textContent = message;
+  return comment;
+};
+
+/**
+ * Функция по отрисовке коментариев
+ */
+const renderComments = () => {
+  const fragment = document.createDocumentFragment();
+  const currentComments = comments.slice(commentsShown, commentsShown + SHOW_COMMENTS_STEP); //показ выбранных коментариеы из массива
+  commentsShown = Math.min(commentsShown + SHOW_COMMENTS_STEP, comments.length); //вместо цикла проверки, обрезание значения
+
+  currentComments.forEach((comment) => fragment.append(renderComment(comment)));
+  commentsList.append(fragment);
+  setButtonState(); //показ кнопки
+  fillCommentsCounter(); //показ живой строки
+};
+
+/**
+ * функция по отбражению коментов, при нажатии на кнопку
+ * @param {object} evt объект события
+ */
+function onShowMoreButtonClick (evt) {
+  evt.preventDefault();
+  renderComments();
+}
 
 /**
  * функция для закрытия модального окна с помощью клавиатуры
- * @param {object} evt объект собития
+ * @param {object} evt объект события
  */
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -22,7 +80,7 @@ const onDocumentKeydown = (evt) => {
 
 /**
  * функция для закрытия модального окна при клике по документу
- * @param {*} evt объект собития
+ * @param {object} evt объект события
  */
 const onDocumentTargetClick = (evt) => {
   if (isModalTarget(evt)) {
@@ -39,6 +97,7 @@ const openUserBigPhoto = () => {
   document.body.classList.add('modal-open');//2. отключаем скрол под подложкой
   document.addEventListener('keydown', onDocumentKeydown); // 3. Добавить обработчики для закрытия на клавишу
   document.addEventListener('click', onDocumentTargetClick); // 4. Добавить обработчики для закрытия на клик вне модального окна
+  btnDownloadMore.addEventListener('click', onShowMoreButtonClick); // 5. Добавить обработчики для кнопки загрузить еще
 };
 
 /**
@@ -49,6 +108,8 @@ function closeUserBigFoto () {
   document.body.classList.remove('modal-open');// 2. включить скрол
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
   document.removeEventListener('click', onDocumentTargetClick); //4. удалить обработчик событий при клике вне модального окна
+  btnDownloadMore.removeEventListener('click', onShowMoreButtonClick); //5. удалить обработчик событий для кнопки загрузить еще
+  commentsShown = 0;
 }
 
 bigFotoCloseElement.addEventListener('click', () => {
@@ -56,106 +117,27 @@ bigFotoCloseElement.addEventListener('click', () => {
 });
 
 /**
- * Функция по отрисовки одного комментария
- * @param {object} деструктуризация параметров обьекта данных
- * @returns возращаем шаблон одного коментария
- */
-const renderComment = ({avatar, name, message}) => {
-  const comment = commentItem.cloneNode(true);
-  const picture = comment.querySelector('.social__picture');
-  picture.src = avatar;
-  picture.alt = name;
-  comment.querySelector('.social__text').textContent = message;
-  comment.classList.add('hidden'); //скрываем каждый комментарий
-  return comment;
-};
-
-/**
- * функция по установлению общего количества комментариев
- * @param {Array} массив коментариев
- */
-const setCommentsCount = (data) => {
-  commentsTotalCount.textContent = data.length;
-};
-
-// обработчик события "Загрузить ещё"
-function onShowMoreButtonClick (event) {
-  event.preventDefault();
-  numberComments += 5;
-}
-
-/**
- * функция по удалянию класса hidden
- * @param {Array} comments массив с комментариями
- */
-function removeClassHidden (comments) {
-  let commentsAmount = 0; //начальное количество коментариев
-
-  for (let i = 0; i < comments.length; i++) {
-    if (i < numberComments) {
-      comments[i].classList.remove('hidden');
-      commentsAmount++;
-    }
-  }
-  commentsCount.innerHTML = `${commentsAmount} из <span class="comments-count">${comments.length}</span> комментариев`;
-
-  if (commentsAmount === comments.length) { //скрываем кнопку показать еще
-    btnDownloadMore.classList.add('hidden');
-
-    btnDownloadMore.removeEventListener('click', (event) => {
-      onShowMoreButtonClick(event);
-      removeClassHidden(comments);
-    });
-  }
-}
-
-/**
- * функция показывает заданное количество комментариев
- */
-function showCommentsList () {
-  numberComments = 5;
-  btnDownloadMore.classList.remove('hidden');
-  const comments = commentsList.children;
-
-  removeClassHidden(comments); // показываем первые 5 коментариев
-
-  btnDownloadMore.addEventListener('click', (event) => {
-    onShowMoreButtonClick(event);
-    removeClassHidden(comments);
-  });
-}
-
-/**
- * Функция по отрисовке коментариев
- * @param {Array} массив коментариев
- */
-const renderComments = (data) => {
-  data.forEach((item) => commentsList.append(renderComment(item)));
-  showCommentsList();
-};
-
-/**
  * функция по наполнению большой картинки данными
  * @param {object} деструктуризация параметров обьекта данных
  */
-const fillBigPhoto = ({url, likes, description, comments}) => {
-  bigFotoElement.querySelector('.big-picture__img img').src = url; //Адрес изображения
-  bigFotoElement.querySelector('.big-picture__img img').alt = description; //описание фото
+const fillBigPhoto = ({url, likes, description, messages}) => {
+  const bigPhoto = bigFotoElement.querySelector('.big-picture__img img');
+  bigPhoto.src = url; //Адрес изображения
+  bigPhoto.alt = description; //описание фото
   bigFotoElement.querySelector('.likes-count').textContent = likes; //количество лайков
   bigFotoElement.querySelector('.social__caption').textContent = description; //описание фото
-  renderComments(comments); //отрисованные коменты
-  setCommentsCount(comments); //общее количество коментов
+  renderComments(messages); //отрисованные коменты
 };
 
 /**
  * функция по созданию фото с коментариями
- * @param {Array} data массив данных
+ * @param {object} data массив обектов данных
  */
-const renderBigPhoto = (data) => {
-  commentsList.innerHTML = ''; //список коментариев
+const displayBigPhoto = (data) => {
+  commentsList.innerHTML = ''; //очищаем список коментариев
+  comments = data.comments; //созданному массиву присваиваем массив комментариев из объекта
   openUserBigPhoto(); //открытие модалки
   fillBigPhoto(data); //наполненеие данными
 };
 
-
-export {renderBigPhoto};
+export {displayBigPhoto};
