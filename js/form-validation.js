@@ -3,7 +3,7 @@ const MAX_HASHTAGS = 5;
 
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
 const hashtagsText = uploadForm.querySelector('.text__hashtags'); //input для заполнения хештегов
-//const commentText = uploadForm.querySelector('.text__description'); //input для коментария
+const commentText = uploadForm.querySelector('.text__description'); //input для коментария
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -55,4 +55,7 @@ const validateForm = () => {
   pristine.addValidator(hashtagsText, validateRepeatedHashtags, 'хэш-тэги не должны повторяться', 3);
 };
 
-export { validateForm, pristine };
+const isInputFocus = () =>
+  document.activeElement === hashtagsText || document.activeElement === commentText;
+
+export { validateForm, pristine, isInputFocus };
