@@ -8,13 +8,13 @@ const commentItem = bigFotoElement.querySelector('.social__comment'); //один
 const commentsCount = bigFotoElement.querySelector('.social__comment-count'); //5 коментариев
 const btnDownloadMore = bigFotoElement.querySelector('.comments-loader'); //кнопка загрузить еще
 const bigFotoCloseElement = bigFotoElement.querySelector('.big-picture__cancel'); //кнопка закрыть
-//let comments;
+let comments;
 let commentsShown = 0;
 
 /**
  * функция по созданию живой строки
  */
-const fillCommentsCounter = (comments) => {
+const fillCommentsCounter = () => {
   commentsCount.innerHTML = `${commentsShown} из <span class="comment-count">${comments.length}</span> комментариев`;
 };
 
@@ -22,7 +22,7 @@ const fillCommentsCounter = (comments) => {
  * функция по показу кнопки загрузить еще
  * @returns
  */
-const setButtonState = (comments) => {
+const setButtonState = () => {
   if (commentsShown >= comments.length) {
     btnDownloadMore.classList.add('hidden');
     return;
@@ -47,7 +47,7 @@ const renderComment = ({avatar, name, message}) => {
 /**
  * Функция по отрисовке коментариев
  */
-const renderComments = (comments) => {
+const renderComments = () => {
   const fragment = document.createDocumentFragment();
   const currentComments = comments.slice(commentsShown, commentsShown + SHOW_COMMENTS_STEP); //показ выбранных коментариеы из массива
   commentsShown = Math.min(commentsShown + SHOW_COMMENTS_STEP, comments.length); //вместо цикла проверки, обрезание значения
@@ -56,12 +56,11 @@ const renderComments = (comments) => {
   commentsList.append(fragment);
   setButtonState(); //показ кнопки
   fillCommentsCounter(); //показ живой строки
-  return fragment;
 };
 
 /**
  * функция по отбражению коментов, при нажатии на кнопку
- * @param {object} evt объект собития
+ * @param {object} evt объект события
  */
 function onShowMoreButtonClick (evt) {
   evt.preventDefault();
@@ -70,7 +69,7 @@ function onShowMoreButtonClick (evt) {
 
 /**
  * функция для закрытия модального окна с помощью клавиатуры
- * @param {object} evt объект собития
+ * @param {object} evt объект события
  */
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -81,7 +80,7 @@ const onDocumentKeydown = (evt) => {
 
 /**
  * функция для закрытия модального окна при клике по документу
- * @param {object} evt объект собития
+ * @param {object} evt объект события
  */
 const onDocumentTargetClick = (evt) => {
   if (isModalTarget(evt)) {
@@ -136,7 +135,7 @@ const fillBigPhoto = ({url, likes, description, messages}) => {
  */
 const displayBigPhoto = (data) => {
   commentsList.innerHTML = ''; //очищаем список коментариев
-  //comments = data.comments; //созданному массиву присваиваем массив комментариев из объекта
+  comments = data.comments; //созданному массиву присваиваем массив комментариев из объекта
   openUserBigPhoto(); //открытие модалки
   fillBigPhoto(data); //наполненеие данными
 };
