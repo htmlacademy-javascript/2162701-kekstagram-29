@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util.js';
-import { pristine, isInputFocus } from './form-validation.js';
+import { pristine, isInputFocus, onFormSubmit } from './form-validation.js';
 
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
 const uploadOverlay = uploadForm.querySelector('.img-upload__overlay'); //подложка
@@ -10,14 +10,12 @@ const uploadCancel = uploadForm.querySelector('.img-upload__cancel'); //кноп
  * функция для закрытия подложки с помощью клавиатуры, за исключением, когда поле ввода в фокусе
  * @param {object} evt объект события
  */
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
+function onDocumentKeydown (evt) {
+  if (isEscapeKey(evt) && !(isInputFocus())) {
     evt.preventDefault();
-    if (isInputFocus()) {
-      closeUserOverlay();
-    }
+    closeUserOverlay();
   }
-};
+}
 
 /**
  * функция для открытия подложки
@@ -41,17 +39,21 @@ function closeUserOverlay () {
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
 }
 
+//при клике на кнопку закрыть
 uploadCancel.addEventListener('click', () => {
   closeUserOverlay();
 });
 
-
-const openUploadForm = () => {
-  uploadInput.addEventListener('change', openUserOverlay);
-};
-
-/*uploadInput.addEventListener('change', () => {
+//контрол загрузки файла
+uploadInput.addEventListener('change', () => {
   openUserOverlay();
-});*/
+});
+
+/**
+ * функция открытия формы загрузки
+ */
+const openUploadForm = () => {
+  uploadForm.addEventListener('submit', onFormSubmit);
+};
 
 export { openUploadForm };

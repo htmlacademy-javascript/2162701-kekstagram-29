@@ -6,10 +6,6 @@ const photos = getPhotosPostedByUser(); //генерируем массив
 
 renderThumbnails(photos); //отрисовывам миниатюры
 
-openUploadForm();
+openUploadForm(); //открытие формы и проверка на валидацию
 
-//import './form-validation.js';
-//import './form-upload-user.js';
-//import './modal-big-photos.js';
-//import './thumbnails.js';
 
