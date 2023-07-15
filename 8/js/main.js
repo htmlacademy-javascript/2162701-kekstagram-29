@@ -6,4 +6,6 @@ const photos = getPhotosPostedByUser(); //генерируем массив
 
 renderThumbnails(photos); //отрисовывам миниатюры
 
-initUploadForm();
+initUploadForm(); //форма загрузки
+
+

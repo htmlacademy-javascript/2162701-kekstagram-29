@@ -1,5 +1,10 @@
-
 const MAX_HASHTAGS = 5;
+const VALID_HASHTAG = /^#[a-zа-яë0-9]{1,19}$/i;
+const ERROR_TEXT = {
+  invalidCount: `нельзя указать больше ${MAX_HASHTAGS} хэш-тэгов`,
+  invalidHashtag: 'не верно введен хеш-тег',
+  notUnique: 'хэш-тэги не должны повторяться',
+};
 
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
 const hashtagsText = uploadForm.querySelector('.text__hashtags'); //input для заполнения хештегов
@@ -8,54 +13,68 @@ const commentText = uploadForm.querySelector('.text__description'); //input дл
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
-  errorTextClass: 'img-upload__field-wrapper--error',
-}, false);
+  errorTextClass: 'img-upload__field-wrapper--error'
+});
+
+/**
+ * находим элементы в фокусе
+ * @returns {boolean} — true, если попадает в фокус
+ */
+const isInputFocus = () => {
+  if (document.activeElement === hashtagsText || document.activeElement === commentText) {
+    return true;
+  }
+};
 
 /**
  * функция по определению хештега
- * @param {} tags значение инпута
+ * @param {string} tags значение инпута
  * обрезаем пробелы, # отсоединяем по пробелу, массив с эл прошедшими проверку
  */
-const normalHashtag = (tags) => tags.trim().split(' ').filter(Boolean);
+const normalHashtag = (tags) => tags
+  .trim().split(' ').filter((hashtag) => Boolean(hashtag.length));
 
 /**
  * Функция проверки введия невалидного хэш-тега
- * @param {*} value текущее значение поля
+ * @param {string} value текущее значение поля
  * перебираем массив на заданные условия, возвращаем true или false
+ * .match() возвращает получившиеся совпадения при сопоставлении строки с регулярным выражением
  */
-const validateInvalidHashtag = (value) => normalHashtag(value).every((tag) => /^#[a-zа-яё0-9]{1-19}$/i.test(tag));
+const validateInvalidHashtag = (value) => normalHashtag(value).every((item) => (item.match(VALID_HASHTAG)));
 
 /**
  * Функция проверки превышено количество хэш-тегов
- * @param {*} value текущее значение поля
+ * @param {string} value текущее значение поля
  */
 const validateNumberOfHashtags = (value) => normalHashtag(value).length <= MAX_HASHTAGS;
 
 /**
  * Функция проверки хэш-теги повторяются
- * @param {*} value текущее значение поля
+ * @param {string} value текущее значение поля
  */
 const validateRepeatedHashtags = (value) => {
-  const tagArray = normalHashtag(value).toLowerCase();
-  return tagArray.length === new Set(tagArray).size; //сравниваем длину массива с длинной коллекции
+  const tagArray = normalHashtag(value).map((tag) => tag.toLowerCase());
+  return tagArray.length === new Set(tagArray).size;
 };
 
-//отправка формы и проверка на валидацию
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+pristine.addValidator(hashtagsText, validateNumberOfHashtags, ERROR_TEXT.invalidCount, 3, true);
+pristine.addValidator(hashtagsText, validateInvalidHashtag, ERROR_TEXT.invalidHashtag, 2, true);
+pristine.addValidator(hashtagsText, validateRepeatedHashtags,ERROR_TEXT.notUnique, 1, true);
 
 /**
- * Функция для валидации формы
+ * отправка формы и проверка на валидацию
+ * @param {object} evt evt объект события
  */
-const validateForm = () => {
-  pristine.addValidator(hashtagsText, validateNumberOfHashtags, `нельзя указать больше ${MAX_HASHTAGS} хэш-тэгов`, 1);
-  pristine.addValidator(hashtagsText, validateInvalidHashtag, 'не верно введен хеш-тег', 2);
-  pristine.addValidator(hashtagsText, validateRepeatedHashtags, 'хэш-тэги не должны повторяться', 3);
+const validationCheck = (evt) => {
+  evt.preventDefault();
+  pristine.validate();
 };
 
-const isInputFocus = () =>
-  document.activeElement === hashtagsText || document.activeElement === commentText;
+/**
+ * сброс ошибок pristine
+ */
+/*const resetPristine = () => {
+  pristine.destroy();
+};*/
 
-export { validateForm, pristine, isInputFocus };
+export { pristine, validationCheck, isInputFocus };
