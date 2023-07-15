@@ -1,15 +1,14 @@
 const MAX_HASHTAGS = 5;
 const VALID_HASHTAG = /^#[a-zа-яë0-9]{1,19}$/i;
+const ERROR_TEXT = {
+  invalidCount: `нельзя указать больше ${MAX_HASHTAGS} хэш-тэгов`,
+  invalidHashtag: 'не верно введен хеш-тег',
+  notUnique: 'хэш-тэги не должны повторяться',
+};
 
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
 const hashtagsText = uploadForm.querySelector('.text__hashtags'); //input для заполнения хештегов
 const commentText = uploadForm.querySelector('.text__description'); //input для коментария
-
-const isInputFocus = () => {
-  if (document.activeElement === hashtagsText || document.activeElement === commentText) {
-    return true;
-  }
-};
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -17,10 +16,14 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error'
 });
 
-const ERROR_TEXT = {
-  invalidCount: `нельзя указать больше ${MAX_HASHTAGS} хэш-тэгов`,
-  invalidHashtag: 'не верно введен хеш-тег',
-  notUnique: 'хэш-тэги не должны повторяться',
+/**
+ * находим элементы в фокусе
+ * @returns {boolean} — true, если попадает в фокус
+ */
+const isInputFocus = () => {
+  if (document.activeElement === hashtagsText || document.activeElement === commentText) {
+    return true;
+  }
 };
 
 /**
@@ -33,20 +36,21 @@ const normalHashtag = (tags) => tags
 
 /**
  * Функция проверки введия невалидного хэш-тега
- * @param {*} value текущее значение поля
+ * @param {string} value текущее значение поля
  * перебираем массив на заданные условия, возвращаем true или false
+ * .match() возвращает получившиеся совпадения при сопоставлении строки с регулярным выражением
  */
-const validateInvalidHashtag = (value) => normalHashtag(value).every((item) => VALID_HASHTAG.test(item));
+const validateInvalidHashtag = (value) => normalHashtag(value).every((item) => (item.match(VALID_HASHTAG)));
 
 /**
  * Функция проверки превышено количество хэш-тегов
- * @param {*} value текущее значение поля
+ * @param {string} value текущее значение поля
  */
 const validateNumberOfHashtags = (value) => normalHashtag(value).length <= MAX_HASHTAGS;
 
 /**
  * Функция проверки хэш-теги повторяются
- * @param {*} value текущее значение поля
+ * @param {string} value текущее значение поля
  */
 const validateRepeatedHashtags = (value) => {
   const tagArray = normalHashtag(value).map((tag) => tag.toLowerCase());
@@ -61,9 +65,16 @@ pristine.addValidator(hashtagsText, validateRepeatedHashtags,ERROR_TEXT.notUniqu
  * отправка формы и проверка на валидацию
  * @param {object} evt evt объект события
  */
-const onFormSubmit = (evt) => {
+const validationCheck = (evt) => {
   evt.preventDefault();
   pristine.validate();
 };
 
-export { pristine, isInputFocus, onFormSubmit };
+/**
+ * сброс ошибок pristine
+ */
+/*const resetPristine = () => {
+  pristine.destroy();
+};*/
+
+export { pristine, validationCheck, isInputFocus };

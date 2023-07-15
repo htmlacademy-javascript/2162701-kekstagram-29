@@ -1,5 +1,7 @@
 import { isEscapeKey } from './util.js';
-import { pristine, isInputFocus, onFormSubmit } from './form-validation.js';
+import { pristine, validationCheck, isInputFocus } from './form-validation.js';
+import { initSlider, hideSlider, resetEffect } from './slider.js';
+import { resetScale, initScale } from './scale.js';
 
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
 const uploadOverlay = uploadForm.querySelector('.img-upload__overlay'); //подложка
@@ -24,6 +26,7 @@ const openUserOverlay = () => {
   uploadOverlay.classList.remove('hidden'); // 1. Показать подложку
   document.body.classList.add('modal-open');//2. отключаем скрол под подложкой
   document.addEventListener('keydown', onDocumentKeydown); // 3. Добавить обработчики для закрытия на клавишу
+  hideSlider(); //скрывается слайдер при первоночальном показе
 };
 
 /**
@@ -31,8 +34,8 @@ const openUserOverlay = () => {
  */
 function closeUserOverlay () {
   uploadForm.reset(); // восстанавливает стандартные значения
-  //resetScale();
-  //resetEffect();
+  resetScale(); //сброс эффектов маштаба
+  resetEffect(); //сброс эффектов слайдера
   pristine.reset(); //сброс ошибок pristine
   uploadOverlay.classList.add('hidden'); // 1. Скрыть подложку
   document.body.classList.remove('modal-open');// 2. включить скрол
@@ -44,16 +47,18 @@ uploadCancel.addEventListener('click', () => {
   closeUserOverlay();
 });
 
-//контрол загрузки файла
+//открытие модалки при событии change
 uploadInput.addEventListener('change', () => {
   openUserOverlay();
 });
 
 /**
- * функция открытия формы загрузки
+ * инициализация формы загрузки
  */
-const openUploadForm = () => {
-  uploadForm.addEventListener('submit', onFormSubmit);
+const initUploadForm = () => {
+  uploadForm.addEventListener('submit', validationCheck); //проверка на валидацию
+  initSlider(); //бегунок слайдера
+  initScale(); // маштаб
 };
 
-export { openUploadForm };
+export { initUploadForm };

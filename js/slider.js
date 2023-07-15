@@ -1,69 +1,91 @@
+import { sliderEffects } from './data-effects.js';
 
-const sliderElement = document.querySelector('.effects__list'); // ползунок слайдера для каждой li
-const valueElement = document.querySelector('.effect-level__value');
-const radioElement = document.querySelector('.effects__radio');
+const sliderEffectsList = document.querySelector('.effects__list'); // список эффектов
+const effectValueElement = document.querySelector('.effect-level__value'); // ползунок слайдера для каждой li
+//const radioElement = document.querySelector('.effects__radio');
+const photoPreview = document.querySelector('.img-upload__preview img'); //загруженное фото для обрабоки
+const sliderContainer = document.querySelector('.img-upload__effect-level'); //
+const sliderElement = document.querySelector('.effect-level__slider');
 
-//Начальное значение в поле ввода записано самостоятельно.
-valueElement.value = 80;
+/**
+ * Функция скрывает слайдер
+ */
+const hideSlider = () => {
+  sliderContainer.classList.add('hidden');
+};
 
-//передаем sliderElement(в нем просим отрисовать слайдер), min, max значение, шаг, с какой стороны закрашивать ползунок
-noUiSlider.create(sliderElement, {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  start: 100,
-  step: 1,
-  connect: 'lower',
-  format: {
-    to: function (value) { //Метод .format.to() нужен для форматирования значения из слайдера и вывода его где-либо.
-      if (Number.isInteger(value)) {//.isInteger целое число
-        return value.toFixed(0); //обрезание всех знаков после запятой если число целое
-      }
-      return value.toFixed(1); // .toFixed количество знаков после запятой
+/**
+ * Функция по изменению фильтров слайдера
+ * @param {object} effect имя выбраного фильтра
+ * @param {object} value значение ползунока выбраного фильтра
+ * @param {object} unit единица измерения выбраного фильтра
+ */
+const changeSliderFilters = (effect, value, unit) => {
+  effectValueElement.value = value;
+  photoPreview.style.filter = `${effect}(${value}${unit})`;
+};
+
+/**
+ * отображение слайдера
+ * @param {object} effects
+ */
+const showSlider = (effects) => {
+  sliderContainer.classList.remove('hidden'); //показывается слайдер
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: effects['min'], //min
+      max: effects['max'] //max значение позунка
     },
-    from: function (value) { //Метод .format.from() нужен для форматирования значения для слайдера
-      return parseFloat(value); //метод parseFloat() для возвращения числа
-    },
-  },
-});
+    start: effects['max'], //при открытии всегда в max позиции
+    step: effects['step'], //шаг ползунка
+    connect: 'lower', //при использовании одной ручкой
+    //tooltips: [true], //можно выводить подсказку
+  });
 
-//.on(на) update слушитель событий нужно вызывать функцию
-//первым аргументом передается тип события, вторым обработчик
-//метод .get вернет значение
-sliderElement.noUiSlider.on('update', () => {
-  valueElement.value = sliderElement.noUiSlider.get();
-});
+  sliderElement.noUiSlider.on('update', () => { //обновление значения ползунка
+    const sliderValue = sliderElement.noUiSlider.get();
+    changeSliderFilters(effects.name, sliderValue, effects.unit);
+  });
+  /*sliderEffectsList.addEventListener('click', () => { //обновление значения ползунка
+    const sliderValue = sliderElement.noUiSlider.set();
+    changeSliderFilters(effects.name, sliderValue, effects.unit);
+  });*/
+};
 
-//обработчик на выбор галочки с условием, от которого зависит, какие параметры передать слайдеру.
-//.updateOptions обновить настройки
-//Для эффекта «Хром» — filter: grayscale(0..1) с шагом 0.1;
-radioElement.addEventListener('change', (evt) => {
-  if (evt.target.checked) {
-    sliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 1,
-      },
-      start: 1,
-      step: 0.1,
-    });
-  } else {
-    sliderElement.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 100,
-      },
-      step: 1,
-    });
-    sliderElement.noUiSlider.set(100);//метод .set устанавливает значение прямо в слайдер
+/**
+ * функция по сбросу эффектов
+ */
+const resetEffect = () => {
+  hideSlider(); //скрывается слайдер
+  photoPreview.style.filter = null; //сбрасываем параметры у фото
+  effectValueElement.value = null; //сбрасываем ползунок
+
+  if (sliderElement.noUiSlider) {
+    sliderElement.noUiSlider.destroy();
   }
-});
+};
 
-//удаление слайдера, метод мы вызываем у свойства noUiSlider элемента.
-//sliderElement.noUiSlider.destroy();
+/**
+ * функция по изменению эффектов при использовании бегунка
+ * @param {object} evt объект события
+ * @returns
+ */
+function onClickChangeEffect (evt) {
+  resetEffect(); //сброс эффектов слайдера при переключении
+  const effects = sliderEffects[evt.target.value];
 
-//отключение слайдера
-//sliderElement.setAttribute('disabled', true);
-//добавлять и убирать атрибут 'disabled' следует с помощью методов .setAttribute() и .removeAttribute()
-// sliderElement.removeAttribute('disabled');
+  if (effects.name === 'none') {
+    photoPreview.removeAttribute('style');
+    return;
+  }
+  showSlider(effects);
+}
+
+/**
+ * инициализация слайдера
+ */
+const initSlider = () => {
+  sliderEffectsList.addEventListener('change', onClickChangeEffect);
+};
+
+export {initSlider, hideSlider, resetEffect};
