@@ -24,13 +24,6 @@ const onSmallerBtnClick = () => {
   scalePhoto (
     Math.max(parseInt(scaleValueElement.value, 10) - SCALE_STEP, MIN_SCALE) //возращаем большее число
   );
-  /*const currentValue = parseInt(scaleValueElement.value, 10);
-  const newValue = currentValue - SCALE_STEP;
-  if (newValue < MIN_SCALE) {
-    scalePhoto(MIN_SCALE);
-  } else {
-    scalePhoto(newValue);
-  }*/
 };
 
 /**
@@ -40,13 +33,6 @@ const onBiggerBtnClick = () => {
   scalePhoto (
     Math.min(parseInt(scaleValueElement.value, 10) + SCALE_STEP, MAX_SCALE) //возращаем меньшее число
   );
-  /*const currentValue = parseInt(scaleValueElement.value, 10);
-  const newValue = currentValue + SCALE_STEP;
-  if (newValue > MAX_SCALE) {
-    scalePhoto(MAX_SCALE);
-  } else {
-    scalePhoto(newValue);
-  }*/
 };
 
 const resetScale = () => scalePhoto(DEFAULT_SCALE_VALUE);
