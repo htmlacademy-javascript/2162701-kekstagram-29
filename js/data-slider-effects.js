@@ -1,38 +1,38 @@
-// Модуль данных для фильтров фотографии
+// Модуль данных для фильтров фотографии словарь
 
 const sliderEffects = {
-  'none': {
+  none: {
     name: 'none',
   },
-  'chrome': {
+  chrome: {
     name: 'grayscale',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  'sepia': {
+  sepia: {
     name: 'sepia',
     min: 0,
     max: 1,
     step: 0.1,
     unit: '',
   },
-  'marvin': {
+  marvin: {
     name: 'invert',
     min: 0,
     max: 100,
     step: 1,
     unit: '%',
   },
-  'phobos': {
+  phobos: {
     name: 'blur',
     min: 0,
     max: 3,
     step: 0.1,
     unit: 'px',
   },
-  'heat': {
+  heat: {
     name: 'brightness',
     min: 1,
     max: 3,

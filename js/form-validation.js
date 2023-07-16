@@ -1,5 +1,5 @@
 const MAX_HASHTAGS = 5;
-const VALID_HASHTAG = /^#[a-zа-яë0-9]{1,19}$/i;
+const VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
 const ERROR_TEXT = {
   invalidCount: `нельзя указать больше ${MAX_HASHTAGS} хэш-тэгов`,
   invalidHashtag: 'не верно введен хеш-тег',
@@ -57,24 +57,29 @@ const validateRepeatedHashtags = (value) => {
   return tagArray.length === new Set(tagArray).size;
 };
 
-pristine.addValidator(hashtagsText, validateNumberOfHashtags, ERROR_TEXT.invalidCount, 3, true);
-pristine.addValidator(hashtagsText, validateInvalidHashtag, ERROR_TEXT.invalidHashtag, 2, true);
-pristine.addValidator(hashtagsText, validateRepeatedHashtags,ERROR_TEXT.notUnique, 1, true);
+/**
+ * набор из валидаторов
+ */
+const setValidaator = () => {
+  pristine.addValidator(hashtagsText, validateNumberOfHashtags, ERROR_TEXT.invalidCount, 3, true);
+  pristine.addValidator(hashtagsText, validateInvalidHashtag, ERROR_TEXT.invalidHashtag, 2, true);
+  pristine.addValidator(hashtagsText, validateRepeatedHashtags,ERROR_TEXT.notUnique, 1, true);
+};
 
 /**
  * отправка формы и проверка на валидацию
  * @param {object} evt evt объект события
  */
-const validationCheck = (evt) => {
+/*const validationCheck = (evt) => {
   evt.preventDefault();
-  pristine.validate();
-};
+  setValidaator();
+};*/
 
 /**
  * сброс ошибок pristine
  */
-/*const resetPristine = () => {
-  pristine.destroy();
-};*/
+const resetPristine = () => {
+  pristine.reset();
+};
 
-export { pristine, validationCheck, isInputFocus };
+export { resetPristine, setValidaator, isInputFocus };

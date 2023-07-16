@@ -1,5 +1,5 @@
 import { isEscapeKey } from './util.js';
-import { pristine, validationCheck, isInputFocus } from './form-validation.js';
+import { resetPristine, setValidaator, isInputFocus } from './form-validation.js';
 import { initSlider, hideSlider, resetEffect } from './slider.js';
 import { resetScale, initScale } from './scale.js';
 
@@ -36,7 +36,7 @@ function closeUserOverlay () {
   uploadForm.reset(); // восстанавливает стандартные значения
   resetScale(); //сброс эффектов маштаба
   resetEffect(); //сброс эффектов слайдера
-  pristine.reset(); //сброс ошибок pristine
+  resetPristine(); //сброс ошибок pristine
   uploadOverlay.classList.add('hidden'); // 1. Скрыть подложку
   document.body.classList.remove('modal-open');// 2. включить скрол
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
@@ -52,13 +52,18 @@ uploadInput.addEventListener('change', () => {
   openUserOverlay();
 });
 
+uploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+});
+
 /**
  * инициализация формы загрузки
  */
 const initUploadForm = () => {
-  uploadForm.addEventListener('submit', validationCheck); //проверка на валидацию
+  //uploadForm.addEventListener('submit', validationCheck); //проверка на валидацию
   initSlider(); //бегунок слайдера
   initScale(); // маштаб
+  setValidaator(); //проверка на валидацию
 };
 
 export { initUploadForm };
