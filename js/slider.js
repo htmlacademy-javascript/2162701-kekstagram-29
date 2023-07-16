@@ -1,4 +1,4 @@
-import { sliderEffects } from './data-effects.js';
+import { sliderEffects } from './data-slider-effects.js';
 
 const sliderEffectsList = document.querySelector('.effects__list'); // список эффектов
 const effectValueElement = document.querySelector('.effect-level__value'); // ползунок слайдера для каждой li
@@ -21,8 +21,8 @@ const hideSlider = () => {
  * @param {object} unit единица измерения выбраного фильтра
  */
 const changeSliderFilters = (effect, value, unit) => {
-  effectValueElement.value = value;
-  photoPreview.style.filter = `${effect}(${value}${unit})`;
+  effectValueElement.value = value; //берёт значение из ползунка
+  photoPreview.style.filter = `${effect}(${value}${unit})`; //шаблонная строка добавляет атрибут style
 };
 
 /**
@@ -33,11 +33,11 @@ const showSlider = (effects) => {
   sliderContainer.classList.remove('hidden'); //показывается слайдер
   noUiSlider.create(sliderElement, {
     range: {
-      min: effects['min'], //min
-      max: effects['max'] //max значение позунка
+      min: effects.min, //min
+      max: effects.max //max значение позунка
     },
-    start: effects['max'], //при открытии всегда в max позиции
-    step: effects['step'], //шаг ползунка
+    start: effects.max, //при открытии всегда в max позиции
+    step: effects.step, //шаг ползунка
     connect: 'lower', //при использовании одной ручкой
     //tooltips: [true], //можно выводить подсказку
   });
@@ -46,10 +46,6 @@ const showSlider = (effects) => {
     const sliderValue = sliderElement.noUiSlider.get();
     changeSliderFilters(effects.name, sliderValue, effects.unit);
   });
-  /*sliderEffectsList.addEventListener('click', () => { //обновление значения ползунка
-    const sliderValue = sliderElement.noUiSlider.set();
-    changeSliderFilters(effects.name, sliderValue, effects.unit);
-  });*/
 };
 
 /**
