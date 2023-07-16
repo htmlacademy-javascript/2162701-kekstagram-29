@@ -42,5 +42,5 @@ export {getRandomInteger};
 export {getRandomArrayElement};
 export {getIdGenerator};
 //функция для чистоты кода
-export {isEscapeKey};
-export {isModalTarget};
+export { isEscapeKey, isModalTarget };
+
