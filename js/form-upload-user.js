@@ -67,7 +67,7 @@ uploadForm.addEventListener('submit', (evt) => {
 });
 
 /**
- * функция по бокировке кнопки отправить
+ * функция по блокировке кнопки отправить
  */
 const blockSubmitBtn = () => {
   submitBtn.disabled = true;
@@ -83,7 +83,7 @@ const unblockSubmitBtn = () => {
 };
 
 /**
- *
+ * отправка формы
  * @param {object} cb данные из формы
  */
 const setOnFormSubmit = (cb) => {
@@ -98,16 +98,5 @@ const setOnFormSubmit = (cb) => {
     }
   });
 };
-
-
-/**
- * инициализация формы загрузки
- */
-/*const initUploadForm = () => {
-  //uploadForm.addEventListener('submit', validationCheck); //проверка на валидацию
-  initSlider(); //бегунок слайдера
-  initScale(); // маштаб
-  setValidaator(); //проверка на валидацию
-};*/
 
 export { setOnFormSubmit, closeUserOverlay };
