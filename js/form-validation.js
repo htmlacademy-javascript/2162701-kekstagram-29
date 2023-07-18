@@ -57,29 +57,20 @@ const validateRepeatedHashtags = (value) => {
   return tagArray.length === new Set(tagArray).size;
 };
 
-/**
- * набор из валидаторов
- */
-const setValidaator = () => {
-  pristine.addValidator(hashtagsText, validateNumberOfHashtags, ERROR_TEXT.invalidCount, 3, true);
-  pristine.addValidator(hashtagsText, validateInvalidHashtag, ERROR_TEXT.invalidHashtag, 2, true);
-  pristine.addValidator(hashtagsText, validateRepeatedHashtags,ERROR_TEXT.notUnique, 1, true);
-};
+
+// набор из валидаторов
+pristine.addValidator(hashtagsText, validateNumberOfHashtags, ERROR_TEXT.invalidCount, 3, true);
+pristine.addValidator(hashtagsText, validateInvalidHashtag, ERROR_TEXT.invalidHashtag, 2, true);
+pristine.addValidator(hashtagsText, validateRepeatedHashtags,ERROR_TEXT.notUnique, 1, true);
 
 /**
  * отправка формы и проверка на валидацию
- * @param {object} evt evt объект события
+ * @param {object} evt объект события
  */
 /*const validationCheck = (evt) => {
   evt.preventDefault();
-  setValidaator();
+  pristine.validate();
 };*/
 
-/**
- * сброс ошибок pristine
- */
-const resetPristine = () => {
-  pristine.reset();
-};
 
-export { resetPristine, setValidaator, isInputFocus };
+export { pristine, isInputFocus };

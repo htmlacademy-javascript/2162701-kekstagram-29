@@ -30,14 +30,15 @@ const changeSliderFilters = (effect, value, unit) => {
  * @param {object} effects
  */
 const showSlider = (effects) => {
+  const {min, max, step} = effects;
   sliderContainer.classList.remove('hidden'); //показывается слайдер
   noUiSlider.create(sliderElement, {
     range: {
-      min: effects.min, //min
-      max: effects.max //max значение позунка
+      min: min, //min
+      max: max //max значение позунка
     },
-    start: effects.max, //при открытии всегда в max позиции
-    step: effects.step, //шаг ползунка
+    start: max, //при открытии всегда в max позиции
+    step: step, //шаг ползунка
     connect: 'lower', //при использовании одной ручкой
     //tooltips: [true], //можно выводить подсказку
   });

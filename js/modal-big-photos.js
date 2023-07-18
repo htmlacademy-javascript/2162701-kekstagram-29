@@ -82,7 +82,7 @@ const onDocumentKeydown = (evt) => {
  * функция для закрытия модального окна при клике по документу
  * @param {object} evt объект события
  */
-const onDocumentTargetClick = (evt) => {
+const onBodyClick = (evt) => {
   if (isModalTarget(evt)) {
     evt.preventDefault();
     closeUserBigFoto();
@@ -96,7 +96,7 @@ const openUserBigPhoto = () => {
   bigFotoElement.classList.remove('hidden'); // 1. Показать окно
   document.body.classList.add('modal-open');//2. отключаем скрол под подложкой
   document.addEventListener('keydown', onDocumentKeydown); // 3. Добавить обработчики для закрытия на клавишу
-  document.addEventListener('click', onDocumentTargetClick); // 4. Добавить обработчики для закрытия на клик вне модального окна
+  document.addEventListener('click', onBodyClick); // 4. Добавить обработчики для закрытия на клик вне модального окна
   btnDownloadMore.addEventListener('click', onShowMoreButtonClick); // 5. Добавить обработчики для кнопки загрузить еще
 };
 
@@ -107,7 +107,7 @@ function closeUserBigFoto () {
   bigFotoElement.classList.add('hidden'); // 1. Скрыть окно
   document.body.classList.remove('modal-open');// 2. включить скрол
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
-  document.removeEventListener('click', onDocumentTargetClick); //4. удалить обработчик событий при клике вне модального окна
+  document.removeEventListener('click', onBodyClick); //4. удалить обработчик событий при клике вне модального окна
   btnDownloadMore.removeEventListener('click', onShowMoreButtonClick); //5. удалить обработчик событий для кнопки загрузить еще
   commentsShown = 0;
 }
