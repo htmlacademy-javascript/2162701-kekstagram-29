@@ -44,12 +44,12 @@ function closeMessage () {
 }
 
 /**
- * функция по показу сообщения
+ * общая функция по показу сообщения
  * @param {*} messageElement сообщение
  * @param {*} closeBtnClass класс кнопки
  */
 const showMessage = (messageElement, closeBtnClass) => {
-  document.body.append(messageElement);
+  document.body.append(messageElement); //добавляем элемент
   document.addEventListener('click', onBodyClick); //добавит обработчик событий при клике вне сообщеня окна
   document.addEventListener('keydown', onDocumentKeydown); // добавит обработчик событий при нажатии на клавишу
   messageElement.querySelector(closeBtnClass).addEventListener('click', closeMessage); //закрытие сообщения
