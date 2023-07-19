@@ -9,6 +9,7 @@ const pictureListFragment = document.createDocumentFragment();
  * @param {Object} drawThumbnails - массив объектов
  */
 const renderThumbnails = (drawThumbnails) => {
+  pictureContainerElement.querySelectorAll('.picture').forEach((element) => element.remove()); //удаление перересованных миниатюр для сортировки
   drawThumbnails.forEach((thumbnail) => { //перебираем эл массива отрисованных миниатюр
     const pictureElement = pictureTemplateElement.cloneNode(true); //клонирование элемента со всеми вложенностями
 
