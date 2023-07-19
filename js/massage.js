@@ -1,4 +1,5 @@
 import { isEscapeKey } from './util.js';
+import { onCloseDocumentKeydown } from './form-upload-user.js';
 
 const errorMessage = document.querySelector('#error').content.querySelector('.error'); //cообщение с ошибкой загрузки изображения
 const successMessage = document.querySelector('#success').content.querySelector('.success'); //cообщение об успешной загрузке изображения
@@ -12,12 +13,12 @@ const typeMessage = () => document.querySelector('.error, .success');
  * функция для закрытия сообщения с помощью клавиатуры
  * @param {object} evt объект события
  */
-const onDocumentKeydown = (evt) => {
+function onDocumentKeydown (evt) {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeMessage();
+    onCloseMessage();
   }
-};
+}
 
 const isMessageTarget = (evt) => evt.target === typeMessage();
 
@@ -28,17 +29,18 @@ const isMessageTarget = (evt) => evt.target === typeMessage();
 const onBodyClick = (evt) => {
   if (isMessageTarget(evt)) {
     evt.preventDefault();
-    closeMessage();
+    onCloseMessage();
   }
 };
 
 /**
  * функция закрытия сообщения
  */
-function closeMessage () {
+function onCloseMessage () {
   if (typeMessage()) {
     typeMessage().remove();
   }
+  document.addEventListener('keydown', onCloseDocumentKeydown); //добавить обработчик событий при нажатии на клавишу
   document.removeEventListener('click', onBodyClick); //удалить обработчик событий при клике вне сообщеня окна
   document.removeEventListener('keydown', onDocumentKeydown); // удалить обработчик событий при нажатии на клавишу
 }
@@ -52,7 +54,7 @@ const showMessage = (messageElement, closeBtnClass) => {
   document.body.append(messageElement); //добавляем элемент
   document.addEventListener('click', onBodyClick); //добавит обработчик событий при клике вне сообщеня окна
   document.addEventListener('keydown', onDocumentKeydown); // добавит обработчик событий при нажатии на клавишу
-  messageElement.querySelector(closeBtnClass).addEventListener('click', closeMessage); //закрытие сообщения
+  messageElement.querySelector(closeBtnClass).addEventListener('click', onCloseMessage); //закрытие сообщения
 };
 
 /**
@@ -67,6 +69,7 @@ const showSuccessMessage = () => {
  */
 const showErrorMessage = () => {
   showMessage(errorMessage, '.error__button');
+  document.removeEventListener('keydown', onCloseDocumentKeydown); //удалить обработчик событий при нажатии на клавишу
 };
 
 export {showSuccessMessage, showErrorMessage };
