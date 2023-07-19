@@ -1,12 +1,17 @@
 import { isEscapeKey } from './util.js';
-import { resetPristine, setValidaator, isInputFocus } from './form-validation.js';
+import { pristine, isInputFocus } from './form-validation.js';
 import { initSlider, hideSlider, resetEffect } from './slider.js';
 import { resetScale, initScale } from './scale.js';
 
+const SubmitBtnText = { //текст на кнопке отправить
+  UNBLOCK: 'Сохранить',
+  BLOCK: 'Сохраняю...'
+};
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
 const uploadOverlay = uploadForm.querySelector('.img-upload__overlay'); //подложка
 const uploadInput = uploadForm.querySelector('.img-upload__input'); //контрол загрузки файла
 const uploadCancel = uploadForm.querySelector('.img-upload__cancel'); //кнопка закрыть
+const submitBtn = uploadForm.querySelector('.img-upload__submit'); //кнопка отправить
 
 /**
  * функция для закрытия подложки с помощью клавиатуры, за исключением, когда поле ввода в фокусе
@@ -23,6 +28,8 @@ function onDocumentKeydown (evt) {
  * функция для открытия подложки
  */
 const openUserOverlay = () => {
+  initSlider(); //бегунок слайдера
+  initScale(); // маштаб
   uploadOverlay.classList.remove('hidden'); // 1. Показать подложку
   document.body.classList.add('modal-open');//2. отключаем скрол под подложкой
   document.addEventListener('keydown', onDocumentKeydown); // 3. Добавить обработчики для закрытия на клавишу
@@ -36,7 +43,7 @@ function closeUserOverlay () {
   uploadForm.reset(); // восстанавливает стандартные значения
   resetScale(); //сброс эффектов маштаба
   resetEffect(); //сброс эффектов слайдера
-  resetPristine(); //сброс ошибок pristine
+  pristine.reset(); //сброс ошибок pristine
   uploadOverlay.classList.add('hidden'); // 1. Скрыть подложку
   document.body.classList.remove('modal-open');// 2. включить скрол
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
@@ -52,18 +59,44 @@ uploadInput.addEventListener('change', () => {
   openUserOverlay();
 });
 
+//блокировка отпраки невалидной формы
 uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+  if(!pristine.validate()) {
+    evt.preventDefault();
+  }
 });
 
 /**
- * инициализация формы загрузки
+ * функция по блокировке кнопки отправить
  */
-const initUploadForm = () => {
-  //uploadForm.addEventListener('submit', validationCheck); //проверка на валидацию
-  initSlider(); //бегунок слайдера
-  initScale(); // маштаб
-  setValidaator(); //проверка на валидацию
+const blockSubmitBtn = () => {
+  submitBtn.disabled = true;
+  submitBtn.textContent = SubmitBtnText.BLOCK;
 };
 
-export { initUploadForm };
+/**
+ * функция по разблокировки кнопки отправить
+ */
+const unblockSubmitBtn = () => {
+  submitBtn.disabled = false;
+  submitBtn.textContent = SubmitBtnText.UNBLOCK;
+};
+
+/**
+ * отправка формы
+ * @param {object} cb данные из формы
+ */
+const setOnFormSubmit = (cb) => {
+  uploadForm.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+
+    if (isValid) {
+      blockSubmitBtn();
+      await cb(new FormData(uploadForm));
+      unblockSubmitBtn();
+    }
+  });
+};
+
+export { setOnFormSubmit, closeUserOverlay };
