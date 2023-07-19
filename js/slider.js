@@ -2,7 +2,6 @@ import { sliderEffects } from './data-slider-effects.js';
 
 const sliderEffectsList = document.querySelector('.effects__list'); // список эффектов
 const effectValueElement = document.querySelector('.effect-level__value'); // ползунок слайдера для каждой li
-//const radioElement = document.querySelector('.effects__radio');
 const photoPreview = document.querySelector('.img-upload__preview img'); //загруженное фото для обрабоки
 const sliderContainer = document.querySelector('.img-upload__effect-level'); //
 const sliderElement = document.querySelector('.effect-level__slider');

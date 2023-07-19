@@ -3,15 +3,20 @@ import { pristine, isInputFocus } from './form-validation.js';
 import { initSlider, hideSlider, resetEffect } from './slider.js';
 import { resetScale, initScale } from './scale.js';
 
+const FILE_TYPES = ['gif', 'webp', 'jpeg', 'png', 'avif', 'jpg', 'svg'];
+
 const SubmitBtnText = { //текст на кнопке отправить
   UNBLOCK: 'Сохранить',
   BLOCK: 'Сохраняю...'
 };
+
 const uploadForm = document.querySelector('.img-upload__form'); //форма загрузки
 const uploadOverlay = uploadForm.querySelector('.img-upload__overlay'); //подложка
 const uploadInput = uploadForm.querySelector('.img-upload__input'); //контрол загрузки файла
 const uploadCancel = uploadForm.querySelector('.img-upload__cancel'); //кнопка закрыть
 const submitBtn = uploadForm.querySelector('.img-upload__submit'); //кнопка отправить
+const photoEffectPreviews = document.querySelectorAll('.effects__preview'); //наложение эффекта на изображение
+const photoPreview = document.querySelector('.img-upload__preview img'); //загруженное фото для обрабоки
 
 /**
  * функция для закрытия подложки с помощью клавиатуры, за исключением, когда поле ввода в фокусе
@@ -49,6 +54,23 @@ function closeUserOverlay () {
   document.removeEventListener('keydown', onDocumentKeydown); //3. удалить обработчик событий при нажатии на клавишу
 }
 
+/**
+ * Показ загруженного фото
+ */
+const showUploadPhoto = () => {
+  const file = uploadInput.files[0];
+  const fileName = file.name.toLowerCase(); //приводим к одному регистру
+
+  const matchs = FILE_TYPES.some((extention) => fileName.endsWith(extention)); //проверка расширения файла .some() пройдемся по массиву с помошью .endsWith()
+
+  if (matchs) {
+    photoPreview.src = URL.createObjectURL(file); // метод URL.createObjectURL() делает ссылку на содержимое
+    photoEffectPreviews.forEach((preview) => {
+      preview.style.backgroundImage = `url(${photoPreview.src})`;
+    });
+  }
+};
+
 //при клике на кнопку закрыть
 uploadCancel.addEventListener('click', () => {
   closeUserOverlay();
@@ -57,6 +79,7 @@ uploadCancel.addEventListener('click', () => {
 //открытие модалки при событии change
 uploadInput.addEventListener('change', () => {
   openUserOverlay();
+  showUploadPhoto();
 });
 
 //блокировка отпраки невалидной формы
