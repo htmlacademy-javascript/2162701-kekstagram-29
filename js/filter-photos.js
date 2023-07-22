@@ -6,9 +6,9 @@ const FilterType = {
   DISCUSSED: 'filter-discussed'
 };
 
-const photosFilter = document.querySelector('.img-filters');
+const photosFilter = document.querySelector('.img-filters'); // фильтрация изображений от других пользователей
 let currentFilter = FilterType.DEFAULT;
-let photos = [];
+let photos = []; //новый массив
 
 /**
  * сортировка случайных фото
@@ -39,7 +39,7 @@ const getSortedPhotos = () => {
 };
 
 /**
- * функция по отработке клика по фильтрам сортировки
+ * функция по  навешиванию клика по фильтрам сортировки
  * @param {*} cb с отрисоваными фото по выбранаму фильтру
  */
 const onClickFilter = (cb) => {

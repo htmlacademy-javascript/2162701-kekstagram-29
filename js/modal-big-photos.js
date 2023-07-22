@@ -15,7 +15,7 @@ let commentsShown = 0;
  * функция по созданию живой строки
  */
 const fillCommentsCounter = () => {
-  commentsCount.innerHTML = `${commentsShown} из <span class="comment-count">${comments.length}</span> комментариев`;
+  commentsCount.innerHTML = `${commentsShown} из <span class="comments-count">${comments.length}</span> комментариев`;
 };
 
 /**
